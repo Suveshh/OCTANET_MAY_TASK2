@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To-Do LIst</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Varela Round"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
+      integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <style>
+    * {
+      margin: 0%;
+      padding: 0%;
+      font-family: "Varela Round";
+      box-sizing: border-box;
+    }
+    .main {
+      width: 100%;
+      height: 100vh;
+      background: linear-gradient(140deg, #2da34b, #fff828);
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+    .app {
+      width: 600px;
+      background: #ffffff;
+      margin: 100px 20px;
+      padding: 40px 60px 70px;
+      text-align: left;
+      border-radius: 15px;
+    }
+    h2 {
+      font-size: xx-large;
+      margin-bottom: 40px;
+    }
+    .add {
+      display: flex;
+      justify-content: space-between;
+      background: #e1dbdb;
+      border-radius: 30px;
+      padding-left: 20px;
+      margin-bottom: 25px;
+    }
+    .text {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      padding: 15px;
+      font-size: 16px;
+    }
+    button {
+      z-index: 1000;
+      border: none;
+      outline: none;
+      padding: 16px 50px;
+      background-color: #ff5945;
+      border-radius: 40px;
+      color: #ffffff;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    ul li {
+      margin-bottom: 5px;
+      user-select: none;
+      list-style: none;
+      font-size: 17px;
+      padding: 12px 8px 12px 50px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #f7f1f1;
+      border-radius: 10px;
+      position: relative;
+    }
+    ul li::before {
+      content: "";
+      position: absolute;
+      height: 28px;
+      width: 28px;
+      background-image: url(unchecked.png);
+      background-size: cover;
+      background-position: center;
+      top: 8px;
+      left: 8px;
+    }
+    .checked {
+      color: #444444;
+      text-decoration: line-through;
+    }
+    ul li.checked::before {
+      background-image: url(checked.png);
+    }
+    ul li p {
+      position: absolute;
+      left: 93%;
+      color: #555;
+      font-weight: 800;
+      font-size: 18px;
+    }
+    ul li p:hover {
+      color: #ff0000;
+    }
+  </style>
+  <body>
+    <div class="main">
+      <div class="app">
+        <h2>
+          To-Do List
+          <span style="margin-left: 20px"
+            ><i class="fa-solid fa-list fa-xl" style="color: #ff5945"></i
+          ></span>
+        </h2>
+        <div class="add">
+          <input
+            class="text"
+            id="txt"
+            type="text"
+            value=""
+            placeholder="Add Your Task"
+          />
+          <button onclick="addList()" id="btn">ADD</button>
+        </div>
+        <ul id="list">
+          <!-- <li class="checked">pTask 1</li> -->
+        </ul>
+      </div>
+    </div>
+  </body>
+  <script>
+    const input = document.getElementById("txt");
+    const btn = document.getElementById("btn");
+    const list = document.getElementById("list");
+    function addList() {
+      if (input.value === "") {
+        alert("Write Something");
+      } else {
+        let li = document.createElement("li");
+        li.innerText = input.value;
+        list.appendChild(li);
+        let span = document.createElement("p");
+        span.innerHTML = "\u00d7";
+        li.appendChild(span);
+      }
+      input.value = "";
+      Save();
+    }
+    list.addEventListener(
+      "click",
+      function (e) {
+        if (e.target.tagName === "P") {
+          e.target.parentElement.remove();
+          Save();
+        } else if (e.target.tagName === "LI") {
+          e.target.classList.toggle("checked");
+          Save();
+        }
+      },
+      false
+    );
+    function Save() {
+      localStorage.setItem("task", list.innerHTML);
+    }
+    function Load() {
+      list.innerHTML = localStorage.getItem("task");
+    }
+    Load();
+  </script>
+</html>

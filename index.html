@@ -52,19 +52,31 @@
       margin-bottom: 25px;
     }
     .text {
-      width: 100%;
+      width: 25%;
       border: none;
       outline: none;
       background: transparent;
       padding: 15px;
       font-size: 16px;
     }
+    .due-date {
+      border: none;
+      outline: none;
+      background: transparent;
+      color: #6f6e6e;
+    }
+    .priority {
+      border: none;
+      outline: none;
+      background: transparent;
+      color: #6f6e6e;
+    }
     button {
       z-index: 1000;
       border: none;
       outline: none;
       padding: 16px 50px;
-      background-color: #ff5945;
+      background-color: #ff5100;
       border-radius: 40px;
       color: #ffffff;
       font-size: 16px;
@@ -102,15 +114,19 @@
     ul li.checked::before {
       background-image: url(checked.png);
     }
-    ul li p {
+    ul li span {
       position: absolute;
       left: 93%;
       color: #555;
       font-weight: 800;
       font-size: 18px;
     }
-    ul li p:hover {
+    ul li span:hover {
       color: #ff0000;
+    }
+    ul li i {
+      position: absolute;
+      right: 10%;
     }
   </style>
   <body>
@@ -128,38 +144,105 @@
             id="txt"
             type="text"
             value=""
-            placeholder="Add Your Task"
+            placeholder="Your Task"
           />
+          <input
+            class="due-date"
+            id="due-date"
+            type="date"
+            value=""
+            placeholder="set Due Date"
+          />
+          <select class="priority" id="priority">
+            <option value="low">Priority</option>
+            <option
+              value="low"
+              style="color: #00ff37; font-size: medium; font-weight: 600"
+            >
+              Low
+            </option>
+            <option
+              value="medium"
+              style="color: #0d00ff; font-size: medium; font-weight: 600"
+            >
+              Medium
+            </option>
+            <option
+              value="high"
+              style="color: #ff0000; font-size: medium; font-weight: 600"
+            >
+              High
+            </option>
+          </select>
+
           <button onclick="addList()" id="btn">ADD</button>
         </div>
-        <ul id="list">
-          <!-- <li class="checked">pTask 1</li> -->
-        </ul>
+        <ul id="list"></ul>
       </div>
     </div>
   </body>
   <script>
     const input = document.getElementById("txt");
+    const dueDateInput = document.getElementById("due-date");
+    const prioritySelect = document.getElementById("priority");
     const btn = document.getElementById("btn");
     const list = document.getElementById("list");
+    let icon;
     function addList() {
       if (input.value === "") {
         alert("Write Something");
       } else {
         let li = document.createElement("li");
-        li.innerText = input.value;
-        list.appendChild(li);
-        let span = document.createElement("p");
+        li.innerText = input.value + " - Due: " + dueDateInput.value;
+        if (prioritySelect.value === "low") {
+          let icon = document.createElement("i");
+          icon.className = "fa-solid fa-circle fa-md";
+          icon.style.color = "#00ff37";
+          li.appendChild(icon);
+          li.setAttribute("data-priority", "low");
+        } else if (prioritySelect.value === "medium") {
+          let icon = document.createElement("i");
+          icon.className = "fa-solid fa-circle fa-md";
+          icon.style.color = "#0d00ff";
+          li.appendChild(icon);
+          li.setAttribute("data-priority", "medium");
+        } else {
+          let icon = document.createElement("i");
+          icon.className = "fa-solid fa-circle fa-md";
+          icon.style.color = "#ff0000";
+          li.appendChild(icon);
+          li.setAttribute("data-priority", "high");
+        }
+        let span = document.createElement("span");
         span.innerHTML = "\u00d7";
         li.appendChild(span);
+        if (prioritySelect.value === "high") {
+          list.prepend(li);
+        } else if (prioritySelect.value === "medium") {
+          let highPriorityTasks = Array.from(list.children).filter(
+            (child) => child.getAttribute("data-priority") === "high"
+          );
+          if (highPriorityTasks.length > 0) {
+            list.insertBefore(
+              li,
+              highPriorityTasks[highPriorityTasks.length - 1].nextSibling
+            );
+          } else {
+            list.prepend(li);
+          }
+        } else {
+          list.appendChild(li);
+        }
       }
       input.value = "";
+      dueDateInput.value = "";
+      prioritySelect.value = "low";
       Save();
     }
     list.addEventListener(
       "click",
       function (e) {
-        if (e.target.tagName === "P") {
+        if (e.target.tagName === "SPAN") {
           e.target.parentElement.remove();
           Save();
         } else if (e.target.tagName === "LI") {

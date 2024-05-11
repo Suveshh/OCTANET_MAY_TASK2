@@ -94,6 +94,7 @@
       font-size: 16px;
       cursor: pointer;
     }
+
     ul li {
       margin-bottom: 5px;
       user-select: none;
@@ -140,6 +141,10 @@
       position: absolute;
       right: 10%;
     }
+    ul li p {
+      width: 80%;
+      overflow-x: auto;
+    }
     @media screen and (max-width: 760px) {
       .app {
         width: 305px;
@@ -183,7 +188,7 @@
     <div class="main">
       <div class="app">
         <h2>
-          To-Do <span>List</span>
+          To-Do <span>List.</span>
           <span style="margin-left: 20px"
             ><i
               id="logo"
@@ -204,6 +209,7 @@
             class="due-date"
             id="due-date"
             type="date"
+            onblur="dd/mm/yy"
             value=""
             placeholder="Due Date"
           />
@@ -231,7 +237,9 @@
 
           <button onclick="addList()" id="btn">ADD</button>
         </div>
-        <ul id="list"></ul>
+        <div id="list-container">
+          <ul id="list"></ul>
+        </div>
       </div>
     </div>
   </body>
@@ -247,7 +255,9 @@
         alert("Write Something");
       } else {
         let li = document.createElement("li");
-        li.innerText = input.value + " - Due: " + dueDateInput.value;
+        let p = document.createElement("p");
+        p.innerText = input.value + " - Due: " + dueDateInput.value;
+        li.appendChild(p);
         if (prioritySelect.value === "low") {
           let icon = document.createElement("i");
           icon.className = "fa-solid fa-circle fa-md";
